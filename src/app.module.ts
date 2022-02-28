@@ -9,14 +9,18 @@ import { UsersController } from './users/users.controller';
 import { UsersService } from './users/users.service';
 import { UsersModule } from './users/users.module';
 import { User } from './schemas/users.schema';
+import { AuthController } from './auth/auth.controller';
+import { AuthService } from './auth/auth.service';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
     TodosModule,
     TypeOrmModule.forRoot({ type: 'sqlite', database: 'todo1.sqlite', entities: [Todo, User], synchronize: true }),
     UsersModule,
+    AuthModule,
   ],
-  controllers: [AppController, UsersController],
-  providers: [AppService, UsersService],
+  controllers: [AppController, UsersController, AuthController],
+  providers: [AppService, UsersService, AuthService],
 })
 export class AppModule { }
