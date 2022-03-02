@@ -17,6 +17,8 @@ export class Todo {
 
     @ManyToOne(type => Auth, user => user.todos)
     user: Auth;
+    // @Column()
+    // userId: string;
 
 
 }
