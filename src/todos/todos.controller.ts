@@ -2,12 +2,12 @@ import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { ITodo } from '../interface/todo.interface';
 import { TodosService } from './todos.service';
 
-@Controller('todos')
+@Controller('todo')
 export class TodosController {
 
     constructor(private todoservice: TodosService) { }
 
-    @Post()
+    @Post('/create')
     createTodo(@Body() body: any) {
         console.log(body, 'Create Todo');
         return this.todoservice.create(body);
@@ -15,7 +15,7 @@ export class TodosController {
     }
     @Get()
     getTodos(): Promise<ITodo[]> {
-        console.log('list of todos');
+        console.log('list of todo');
         return this.todoservice.findAll();
     }
 
