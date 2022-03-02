@@ -1,25 +1,33 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { IAuth } from 'src/interface/auth.interface';
+import { Iuser } from 'src/interface/user.interface';
+import { userDto } from './dto/create-user.dto';
+import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {
-    @Post()
-    createUser(@Body() body: any) {
-        console.log(body, 'Create User');
 
-        return 'This action adds a new user.';
-    }
-    @Get()
-    getUsers() {
+    constructor(private userService: UsersService) { }
+
+    @Get('/users')
+    async getUsers(): Promise<IAuth[]> {
         console.log('list of users');
-
-        return 'This action returns all users.';
+        return await this.userService.userAll();
     }
-    @Get('/:id')
-
-
-    getUserByIde(@Param('id') id: string) {
+    @Get('user/:id')
+    async getUserByIde(@Param('id') id: string) {
         console.log(id, 'Get User By Id');
-        return `This action returns a #${id} user.`;
+        return await this.userService.userOne(id);
+    }
+    @Patch('/:id')
+    async patchUser(@Param('id') id: string, @Body() body: userDto) {
+        console.log(id, body, 'Patch User');
+        return await this.userService.userPatch(id, body);
+    }
+    @Delete('/:id')
+    async deleteUser(@Param('id') id: string) {
+        console.log(id, 'Delete User');
+        return await this.userService.userDelete(id);
     }
 
 

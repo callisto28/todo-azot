@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { ITodo } from '../interface/todo.interface';
+import { TodoDto } from './dto/create-todo.dto';
 import { TodosService } from './todos.service';
 
 @Controller('todo')
@@ -8,7 +9,7 @@ export class TodosController {
     constructor(private todoservice: TodosService) { }
 
     @Post('/create')
-    createTodo(@Body() body: any) {
+    createTodo(@Body() body: TodoDto) {
         console.log(body, 'Create Todo');
         return this.todoservice.create(body);
 
@@ -24,7 +25,7 @@ export class TodosController {
         return this.todoservice.findOne(id);
     }
 
-    @Patch('/:id') patchTodo(@Param('id') id: string, @Body() body: any) {
+    @Patch('/:id') patchTodo(@Param('id') id: string, @Body() body: TodoDto) {
         console.log(id, body, 'Patch Todo');
         return this.todoservice.patchTodo(id, body);
     }

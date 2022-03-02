@@ -1,0 +1,10 @@
+{
+  "type": "sqlite",
+  "host": "localhost",
+  "port": 3306,
+  "database": "todo3.sqlite",
+  "entities": ["Todo", "User", "Auth"],
+  "username": "root",
+  "password": "root",
+  "synchronize": true
+}
