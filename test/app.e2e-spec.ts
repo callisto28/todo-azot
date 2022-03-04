@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
+import { TodoDto } from '../src/todos/dto/create-todo.dto';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -21,4 +22,30 @@ describe('AppController (e2e)', () => {
       .expect(200)
       .expect('Hello World!');
   });
+
+  afterAll(() => {
+    app.close();
+  });
+
+  describe('todo', () => {
+    describe('Get empty todo', () => {
+      it(" should get todo", () => {
+        return request(app.getHttpServer())
+
+          .get('/todo')
+          .expect(200)
+          .expect({
+            todos: [],
+          })
+
+      })
+    })
+
+  }
+  );
+
+
+
+
+
 });

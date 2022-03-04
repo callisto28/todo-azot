@@ -1,33 +1,51 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
-import { ITodo } from '../interface/todo.interface';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, UseGuards } from '@nestjs/common';
+import { GetUser } from 'src/auth/decorator';
+import { JwtGuard } from 'src/auth/guard';
 import { TodoDto } from './dto/create-todo.dto';
+import { EditTodoDto } from './dto/edit-todo.dto';
 import { TodosService } from './todos.service';
 
+
+@UseGuards(JwtGuard)
 @Controller('todo')
 export class TodosController {
 
     constructor(private todoservice: TodosService) { }
 
-    @Post('/create')
-    createTodo(@Body() body: TodoDto) {
-        console.log(body, 'Create Todo');
-        return this.todoservice.create(body);
-
-    }
     @Get()
-    getTodos(): Promise<ITodo[]> {
-        console.log('list of todo');
-        return this.todoservice.findAll();
+    getTodos(@GetUser('id') userId: string) {
+
+        return this.todoservice.getTodos(userId);
     }
 
-    @Get('/:id') getTodoById(@Param('id') id: string) {
-        console.log(id, 'Get Todo By Id');
-        return this.todoservice.findOne(id);
+    @Get('/:id')
+    getTodoById(
+        @GetUser('id') userId: string,
+        @Param('id', ParseIntPipe) todoId: string) {
+        return this.todoservice.getTodoById(userId, todoId);
     }
 
-    @Patch('/:id') patchTodo(@Param('id') id: string, @Body() body: TodoDto) {
-        console.log(id, body, 'Patch Todo');
-        return this.todoservice.patchTodo(id, body);
+    @Post('/create')
+    createTodo(
+        @GetUser('id') userId: string,
+        @Body() body: TodoDto) {
+        return this.todoservice.createTodo(userId, body);
+    }
+
+    @Patch('/:id')
+    patchTodo(
+        @GetUser('id') userId: string,
+        @Param('id', ParseIntPipe) todoId: string,
+        @Body() body: EditTodoDto) {
+        return this.todoservice.patchTodo(userId, body, todoId);
+
+    }
+
+    @Delete('/:id')
+    deleteTodo(
+        @GetUser('id') userId: string,
+        @Param('id', ParseIntPipe) todoId: string) {
+        return this.todoservice.deleteTodo(userId, todoId);
     }
 }
 

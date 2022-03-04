@@ -1,33 +1,69 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, ForbiddenException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+
 import { Repository } from 'typeorm';
 import { ITodo } from '../interface/todo.interface';
 import { Todo } from '../schemas/todos.schema';
+import { TodoDto } from './dto/create-todo.dto';
+import { EditTodoDto } from './dto/edit-todo.dto';
 
 @Injectable()
 export class TodosService {
     constructor(@InjectRepository(Todo) private repo: Repository<ITodo>) { }
 
-    create(body: any) {
-        const todo = this.repo.create(body);
-        return this.repo.save(todo);
+
+
+    async getTodos(userId: string,) {
+        const todos = await this.repo.find({ where: { userId } });
+        return todos;
     }
-    findAll() {
-        return this.repo.find();
+
+    async getTodoById(
+        userId: string,
+        todoId: string) {
+        return await this.repo.findOne({ where: { userId, id: todoId } });
     }
-    findOne(id: string) {
-        if (!id) return null;
-        return this.repo.findOne(id);
+
+    async createTodo(
+        userId: string,
+        body: TodoDto
+    ) {
+        const todo = await this.repo.save({ ...body, userId });
+        return todo;
     }
-    patchTodo(id: string, body: any) {
-        if (!id) return null;
-        const todo = this.repo.create(body);
-        return this.repo.save(todo);
+
+    async patchTodo(
+        userId: string,
+        body: EditTodoDto,
+        todoId: string
+    ) {
+        const todo = await this.repo.findOne({
+            where: {
+                id: todoId,
+            }
+        });
+        if (!todo || todo.userId !== userId) {
+            throw new ForbiddenException('access denied');
+        };
+        return this.repo.update({ id: todoId }, body);
     }
-    async update(id: string) {
-        const todo = await this.repo.findOne(id);
-        todo.completed = !todo.completed;
-        return this.repo.save({ ...todo, isCompleted: true });
+
+
+    async deleteTodo(
+        userId: string,
+        todoId: string
+    ) {
+        const todo = await this.repo.findOne({
+            where: {
+                id: todoId,
+            }
+        });
+        if (!todo || todo.userId !== userId) {
+            throw new ForbiddenException('access denied');
+        };
+        return this.repo.delete({ id: todoId });
+
     }
+
 
 }

@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsOptional, IsString, isUUID } from "class-validator";
+import { IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 export class userDto {
 
@@ -14,4 +14,6 @@ export class userDto {
     @IsString()
     @IsOptional()
     lastname: string;
+
+    readonly todos: string[];
 }

@@ -1,16 +1,22 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Todo } from "./todos.schema";
+
 @Entity()
 export class User {
+    static findOne(arg0: { where: { id: number; } }): User | PromiseLike<User> {
+        throw new Error('Method not implemented.');
+    }
     @PrimaryGeneratedColumn("uuid")
     id: string;
     @Column()
-    userName: string;
+    username: string;
     @Column()
     password: string;
     @Column()
-    firstName: string;
+    firstname: string;
     @Column()
-    lastName: string;
+    lastname: string;
+
 }
 
 

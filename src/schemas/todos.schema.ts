@@ -1,5 +1,5 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Auth } from "./auth.schema";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+
 
 @Entity()
 export class Todo {
@@ -15,11 +15,8 @@ export class Todo {
     @Column({ default: false })
     completed: boolean;
 
-    @ManyToOne(type => Auth, user => user.todos)
-    user: Auth;
-    // @Column()
-    // userId: string;
-
+    @Column()
+    readonly userId: string;
 
 }
 

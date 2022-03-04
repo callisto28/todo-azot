@@ -1,18 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { IAuth } from 'src/interface/auth.interface';
-import { Auth } from 'src/schemas/auth.schema';
+import { Iuser } from 'src/interface/user.interface';
+import { User } from 'src/schemas/users.schema';
 import { Repository } from 'typeorm';
 
 
 @Injectable()
 export class UsersService {
 
-    constructor(@InjectRepository(Auth) private userRepo: Repository<IAuth>) { }
+    constructor(@InjectRepository(User) private userRepo: Repository<Iuser>) { }
 
-    async userAll(): Promise<IAuth[]> {
-        return await this.userRepo.find();
-    }
+
     async userOne(id: string) {
         if (!id) return null;
         return await this.userRepo.findOne(id);
@@ -27,5 +25,7 @@ export class UsersService {
         if (!id) return null;
         return await this.userRepo.delete(id);
     }
+
+
 
 }
